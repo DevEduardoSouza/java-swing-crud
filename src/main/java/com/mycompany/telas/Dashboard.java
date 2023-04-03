@@ -4,6 +4,14 @@
  */
 package com.mycompany.telas;
 
+import com.mycompany.model.bean.Aluno;
+import com.mycompany.model.dao.AlunoDAO;
+import com.mycompany.render.TableActionCellEditor;
+import com.mycompany.render.TableActionCellRender;
+import com.mycompany.render.TableActionEvent;
+import com.mycompany.render.TableHeaderRenderer;
+import com.mycompany.render.TablePerfilCellRender;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -11,29 +19,97 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.table.JTableHeader;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
-public class Dashboard extends javax.swing.JFrame {
-
+public final class Dashboard extends javax.swing.JFrame {
+    Color cor = new Color(110, 92, 194, 255);
+    AlunoDAO dao = new AlunoDAO();
+        
     /**
      * Creates new form Dashboard
      */
     public Dashboard() {
         initComponents();
+        preencherJtable();
         setImagens();
+        confuguracaoTable();
         jlbNomeUserLogado.setText("<html>Olá, " + "<br>" + "Eduardo</html>");
-        jTable1.getTableHeader().setPreferredSize(new Dimension(jTable1.getColumnModel().getTotalColumnWidth(), 40));
-        
-         
+        jTable1.getTableHeader().setPreferredSize(new Dimension(jTable1.getColumnModel().getTotalColumnWidth(), 40));     
     }
     
     
+    
+    //método vai pegar todas as infromações do banco de dados e preencher a jtable
+    public void preencherJtable(){
+        for(Aluno aluno: dao.findAll()){
+            //Criando um Object com os dados do usuário de cadastro
+            Object[] usuarios = { "foto" ,aluno.getId(), aluno.getUserName(),  aluno.getFirstName(), aluno.getLastName(),  aluno.getEmail(), aluno.getPhone(), aluno.getMatricula() };
+             // adiciona o array de usuários à JTable
+            DefaultTableModel dtmUsuarios = (DefaultTableModel) Dashboard.this.getjTable1().getModel();
+            dtmUsuarios.addRow(usuarios);
+        }
+    }
     //método para passar os dados para -> setImageApp
     public void setImagens(){
+        
+        TableActionEvent event;
+        event = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                boolean isOnEdit = true; 
+                System.out.println("Editar " + row);
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new TelaCadastro(Dashboard.this, row, isOnEdit).setVisible(true);
+                     }
+                });   
+            }
+
+            @Override
+            public void onDelete(int row) {
+                if(jTable1.isEditing())
+                    jTable1.getCellEditor().stopCellEditing();
+                
+                DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+                long id = (Long) model.getValueAt(row, 1);
+
+                dao.remove(id);
+                model.removeRow(row);
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println("ver " + row);
+            }
+        };
+                
+        //Colocando meu Jpanel renderizados com botões na suas collumn
+        jTable1.getColumnModel().getColumn(8).setCellRenderer(new TableActionCellRender());
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(new TablePerfilCellRender());
+        jTable1.getColumnModel().getColumn(8).setCellEditor(new TableActionCellEditor(event));
+        
+        
+        
+        //Vai remover as divisores das colunas
+        jTable1.setShowGrid(false);
+        //Vai remover as divisorias e as bordas do cabeçalho
+        TableCellRenderer baseRenderer = jTable1.getTableHeader().getDefaultRenderer();
+        jTable1.getTableHeader().setDefaultRenderer(new TableHeaderRenderer(baseRenderer));
+        
+       
+        
+
+        
+        
         int widthPadrao = 15;
         int heigthPadrao = 15;
         String srcPadrao = "src\\main\\java\\com\\mycompany\\imgs\\";
@@ -47,7 +123,6 @@ public class Dashboard extends javax.swing.JFrame {
         setImageApp(jlbAnalises, srcPadrao + "analitica.png", widthPadrao, heigthPadrao);
         setImageApp(jlbConfi, srcPadrao + "engrenagem.png", widthPadrao, heigthPadrao);
     }
-    
     //Metódos para adicionar imagens na tela
     public void setImageApp(JLabel localImg, String src, int width, int height){
         //Removendo o texto do label
@@ -68,11 +143,13 @@ public class Dashboard extends javax.swing.JFrame {
         ImageIcon novoIcon = new ImageIcon(novaImg);
         localImg.setIcon(novoIcon);
     }
+    public void confuguracaoTable(){
+        //Mudando a direção do conteúdo
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        jTable1.setDefaultRenderer(Object.class, centerRenderer);
+    }
     
-    
-    
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,6 +181,8 @@ public class Dashboard extends javax.swing.JFrame {
         jbtnAddUser = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        txtValorBusca = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -280,21 +359,44 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        txtValorBusca.setText("Buscar aluno(ID)");
+        txtValorBusca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtValorBuscaActionPerformed(evt);
+            }
+        });
+
+        btnBuscar.setBackground(new java.awt.Color(57, 196, 222));
+        btnBuscar.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscar.setText("Buscar");
+        btnBuscar.setBorderPainted(false);
+        btnBuscar.setFocusPainted(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbtnAddUser)
-                .addGap(25, 25, 25))
-            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtValorBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnBuscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jbtnAddUser)
+                .addGap(25, 25, 25))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,43 +404,52 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jbtnAddUser))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbtnAddUser)
+                    .addComponent(txtValorBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)))
         );
 
-        jTable1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jTable1.setForeground(new java.awt.Color(51, 51, 51));
+        jTable1.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(102, 102, 102));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Foto", "User Name", "First Name", "Last Name", "Email", "Phone", "Matricula", "Ações"
+                "Foto", "ID", "User Name", "First Name", "Last Name", "Email", "Phone", "Matricula", "Ações"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(40);
+        jTable1.setRequestFocusEnabled(false);
+        jTable1.setRowHeight(50);
+        jTable1.setRowMargin(0);
+        jTable1.setSelectionBackground(new java.awt.Color(231, 251, 255));
         jTable1.setSelectionForeground(new java.awt.Color(51, 51, 51));
+        jTable1.setShowGrid(false);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(40);
+            jTable1.getColumnModel().getColumn(8).setMinWidth(120);
+        }
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 831, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -358,7 +469,8 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,17 +511,46 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void jbtnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAddUserActionPerformed
         // TODO add your handling code here:
-        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaCadastro().setVisible(true);
+                new TelaCadastro(Dashboard.this).setVisible(true);
             }
         });
     }//GEN-LAST:event_jbtnAddUserActionPerformed
 
- 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+         
+         Aluno aluno;
+         long id = Long.parseLong( txtValorBusca.getText() );
+         aluno = dao.findById(id);
+         System.out.println("nome: " + aluno.getFirstName());
+//         JOptionPane.showMessageDialog(rootPane, aluno.toString(), "Aluno buscado", HEIGHT);
+
+         //Criando um Object com os dados do usuário de cadastro
+        Object[] usuarios = { "foto" ,aluno.getId(),aluno.getUserName(),  aluno.getFirstName(), aluno.getLastName(),  aluno.getEmail(), aluno.getPhone(), aluno.getMatricula() };
+         // adiciona o array de usuários à JTable
+        DefaultTableModel dtmUsuarios = (DefaultTableModel) Dashboard.this.getjTable1().getModel();
+        dtmUsuarios.addRow(usuarios);
+        
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtValorBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorBuscaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtValorBuscaActionPerformed
+
+    public JTable getjTable1() {
+        return jTable1;
+    }
+
+    public void setjTable1(JTable jTable1) {
+        this.jTable1 = jTable1;
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -435,5 +576,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel lblIconePerfil;
     private javax.swing.JLabel lblNoti;
     private javax.swing.JLabel menuHamburg;
+    private javax.swing.JTextField txtValorBusca;
     // End of variables declaration//GEN-END:variables
 }

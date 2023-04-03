@@ -2,16 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.atvcrud;
+package com.mycompany.model.bean;
 
-import java.awt.Image;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  *
  * @author Eduardo
  */
+
+@MappedSuperclass
 public abstract class  Usuario {
-    protected Image foto;
+//    protected Image foto;
     protected String userName;
     protected String firstName;
     protected String lastName;
@@ -19,8 +21,8 @@ public abstract class  Usuario {
     protected String phone;
     protected String senha;
 
-    public Usuario(Image foto, String userName, String firstName, String lastName, String email, String phone) {
-        this.foto = foto;
+    public Usuario( String userName, String firstName, String lastName, String email, String phone) {
+//        this.foto = foto;
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,13 +39,13 @@ public abstract class  Usuario {
     }
  
 
-    public Image getFoto() {
-        return foto;
-    }
-
-    public void setFoto(Image foto) {
-        this.foto = foto;
-    }
+//    public Image getFoto() {
+//        return foto;
+//    }
+//
+//    public void setFoto(Image foto) {
+//        this.foto = foto;
+//    }
 
     public String getUserName() {
         return userName;
@@ -92,6 +94,13 @@ public abstract class  Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", senha=" + senha + '}';
+    }
+    
+    
     
     
     
