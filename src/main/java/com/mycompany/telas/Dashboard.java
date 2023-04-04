@@ -58,6 +58,7 @@ public final class Dashboard extends javax.swing.JFrame {
             dtmUsuarios.addRow(usuarios);
         }
     }
+    
     //método para passar os dados para -> setImageApp
     public void setImagens(){
         
@@ -83,6 +84,7 @@ public final class Dashboard extends javax.swing.JFrame {
                 long id = (Long) model.getValueAt(row, 1);
 
                 dao.remove(id);
+                
                 model.removeRow(row);
             }
 
