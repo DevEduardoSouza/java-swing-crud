@@ -521,20 +521,16 @@ public final class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtnAddUserActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-         
+
          Aluno aluno;
          long id = Long.parseLong( txtValorBusca.getText() );
          aluno = dao.findById(id);
-         System.out.println("nome: " + aluno.getFirstName());
-//         JOptionPane.showMessageDialog(rootPane, aluno.toString(), "Aluno buscado", HEIGHT);
-
-         //Criando um Object com os dados do usuário de cadastro
+ 
+        //Criando um Object com os dados do usuário de busca
         Object[] usuarios = { "foto" ,aluno.getId(),aluno.getUserName(),  aluno.getFirstName(), aluno.getLastName(),  aluno.getEmail(), aluno.getPhone(), aluno.getMatricula() };
-         // adiciona o array de usuários à JTable
+        // adiciona o array de usuários à JTable
         DefaultTableModel dtmUsuarios = (DefaultTableModel) Dashboard.this.getjTable1().getModel();
         dtmUsuarios.addRow(usuarios);
-        
-        
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtValorBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValorBuscaActionPerformed
