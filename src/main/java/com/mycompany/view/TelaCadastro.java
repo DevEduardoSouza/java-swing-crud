@@ -16,9 +16,9 @@ import javax.swing.table.DefaultTableModel;
 public class TelaCadastro extends javax.swing.JFrame {
     
     Aluno usuario =  new Aluno();
-    Dashboard dashboard;
-    int rowEditar;
-    boolean isOnEdit = false;
+    private Dashboard dashboard;
+    private int rowEditar;
+    private boolean isOnEdit = false;
     /**
      * Creates new form TelaCadastro
      * @param dashboard

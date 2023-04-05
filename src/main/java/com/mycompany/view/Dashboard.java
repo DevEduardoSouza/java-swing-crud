@@ -28,7 +28,7 @@ import javax.swing.table.TableCellRenderer;
  * @author Eduardo de Souza
  */
 public final class Dashboard extends javax.swing.JFrame {
-    Color cor = new Color(110, 92, 194, 255);
+    private Color cor = new Color(110, 92, 194, 255);
     AlunoDAO dao = new AlunoDAO();
         
     /**
