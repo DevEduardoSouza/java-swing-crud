@@ -10,7 +10,7 @@ import jakarta.persistence.Persistence;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
 public class ConnectionFactory {
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("meuPU");

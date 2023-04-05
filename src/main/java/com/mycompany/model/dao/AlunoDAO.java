@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
 public class AlunoDAO {
     

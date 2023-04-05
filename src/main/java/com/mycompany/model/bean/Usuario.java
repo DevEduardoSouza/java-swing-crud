@@ -8,7 +8,7 @@ import jakarta.persistence.MappedSuperclass;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
 
 @MappedSuperclass

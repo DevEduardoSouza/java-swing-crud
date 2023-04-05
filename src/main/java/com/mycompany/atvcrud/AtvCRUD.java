@@ -4,11 +4,11 @@
 
 package com.mycompany.atvcrud;
 
-import com.mycompany.telas.Dashboard;
+import com.mycompany.view.Dashboard;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
 public class AtvCRUD {
 

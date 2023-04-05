@@ -14,7 +14,7 @@ import java.util.Random;
 
 /**
  *
- * @author Eduardo
+ * @author Eduardo de Souza
  */
 @Entity
 @Table(name="Alunos")
