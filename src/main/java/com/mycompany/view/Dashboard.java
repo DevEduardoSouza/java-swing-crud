@@ -37,7 +37,6 @@ public final class Dashboard extends javax.swing.JFrame {
     public Dashboard() {
         initComponents();
         preencherJtable();
-        setImagens();
         confuguracaoTable();
         jlbNomeUserLogado.setText("<html>Olá, " + "<br>" + "Eduardo</html>");
         jTable1.getTableHeader().setPreferredSize(new Dimension(jTable1.getColumnModel().getTotalColumnWidth(), 40));
@@ -57,8 +56,7 @@ public final class Dashboard extends javax.swing.JFrame {
         }
     }
     
-    //método para passar os dados para -> setImageApp
-    public void setImagens(){
+    public void confuguracaoTable(){
         
         TableActionEvent event;
         event = new TableActionEvent() {
@@ -96,57 +94,15 @@ public final class Dashboard extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(8).setCellRenderer(new TableActionCellRender());
         jTable1.getColumnModel().getColumn(0).setCellRenderer(new TablePerfilCellRender());
         jTable1.getColumnModel().getColumn(8).setCellEditor(new TableActionCellEditor(event));
-        
-        
-        
+
         //Vai remover as divisores das colunas
         jTable1.setShowGrid(false);
         //Vai remover as divisorias e as bordas do cabeçalho
         TableCellRenderer baseRenderer = jTable1.getTableHeader().getDefaultRenderer();
         jTable1.getTableHeader().setDefaultRenderer(new TableHeaderRenderer(baseRenderer));
         
- 
         
-        int widthPadrao = 15;
-        int heigthPadrao = 15;
-        String srcPadrao = "src\\main\\java\\com\\mycompany\\imgs\\";
         
-//        setImageApp(lblIconePerfil, srcPadrao + "user.png", widthPadrao, heigthPadrao);
-//        setImageApp(lblIconUser, srcPadrao + "group.png", widthPadrao, heigthPadrao);
-//        setImageApp(menuHamburg, srcPadrao + "menu.png", 20, 20);
-//        setImageApp(lblNoti, srcPadrao + "notificacaoBlack.png", 18, 18);
-//        setImageApp(jlbAvatar, srcPadrao + "avatar01.png", 30, 30);
-//        setImageApp(jbtnAddUser, srcPadrao + "adicionar-amigo.png", widthPadrao, heigthPadrao);
-//        setImageApp(jlbAnalises, srcPadrao + "analitica.png", widthPadrao, heigthPadrao);
-//        setImageApp(jlbConfi, srcPadrao + "engrenagem.png", widthPadrao, heigthPadrao);
-    }
-    
-   
-    
-    //Metódos para adicionar imagens na tela
-    public void setImageApp(JLabel localImg, String src, int width, int height){
-        //Removendo o texto do label
-        localImg.setText("");
-        
-        ImageIcon icon = new ImageIcon(src);
-        
-        Image img = icon.getImage();
-        
-        Image novaImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-        
-        ImageIcon novoIcon = new ImageIcon(novaImg);
-        localImg.setIcon(novoIcon);
-    }
-    
-    public void setImageApp(JButton localImg, String src, int width, int height){
-        ImageIcon icon = new ImageIcon(src);
-        Image img = icon.getImage();
-        
-        Image novaImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-        ImageIcon novoIcon = new ImageIcon(novaImg);
-        localImg.setIcon(novoIcon);
-    }
-    public void confuguracaoTable(){
         //Mudando a direção do conteúdo
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -469,7 +425,10 @@ public final class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        txtValorBusca.setText("Buscar aluno(ID)");
+        txtValorBusca.setBackground(new java.awt.Color(255, 255, 255));
+        txtValorBusca.setForeground(new java.awt.Color(153, 153, 153));
+        txtValorBusca.setText("ID");
+        txtValorBusca.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(57, 196, 222))); // NOI18N
         txtValorBusca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtValorBuscaActionPerformed(evt);
@@ -479,7 +438,7 @@ public final class Dashboard extends javax.swing.JFrame {
         btnBuscar.setBackground(new java.awt.Color(57, 196, 222));
         btnBuscar.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setText("Buscar");
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/icons/pesquisa-de-lupa.png"))); // NOI18N
         btnBuscar.setBorderPainted(false);
         btnBuscar.setFocusPainted(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -501,9 +460,9 @@ public final class Dashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtValorBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtValorBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(btnBuscar)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jbtnAddUser)
                 .addGap(25, 25, 25))
