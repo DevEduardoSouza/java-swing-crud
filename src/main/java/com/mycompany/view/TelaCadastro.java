@@ -7,27 +7,37 @@ package com.mycompany.view;
 
 import com.mycompany.model.bean.Aluno;
 import com.mycompany.model.dao.AlunoDAO;
+import com.mycompany.model.facade.AlunoFacade;
+import com.mycompany.model.facade.AlunoFacadeImpl;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Eduardo de Souza
  */
-public class TelaCadastro extends javax.swing.JFrame {
+public class TelaCadastro extends javax.swing.JFrame{
     
-    Aluno usuario =  new Aluno();
+    private Aluno aluno =  new Aluno();
+    private AlunoDAO dao = new AlunoDAO();
+
     private Dashboard dashboard;
     private int rowEditar;
     private boolean isOnEdit = false;
+    
     /**
      * Creates new form TelaCadastro
      * @param dashboard
      */
+    
+    //Contrutor para cadastro
     public TelaCadastro(Dashboard dashboard) {
         initComponents();
         this.dashboard = dashboard;
         jLabel1.setText("Adicionar Aluno");
     }
+    
+    
+    //Contrutor para editar
     public TelaCadastro(Dashboard dashboard, int row, boolean isOnEdit) {
         initComponents();
         this.dashboard = dashboard;
@@ -36,6 +46,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         jLabel1.setText("Editar Aluno");
 
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,7 +63,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         txtTelefone = new javax.swing.JTextField();
         txtMatricula = new javax.swing.JTextField();
-        btnEnviar = new javax.swing.JButton();
+        btnCadastrar = new javax.swing.JButton();
         btnEnviar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -85,17 +96,17 @@ public class TelaCadastro extends javax.swing.JFrame {
         txtMatricula.setText("Matricula");
         txtMatricula.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(234, 234, 234))); // NOI18N
 
-        btnEnviar.setBackground(new java.awt.Color(57, 196, 220));
-        btnEnviar.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
-        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
-        btnEnviar.setText("Enviar");
-        btnEnviar.setBorder(null);
-        btnEnviar.setBorderPainted(false);
-        btnEnviar.setFocusPainted(false);
-        btnEnviar.setFocusable(false);
-        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+        btnCadastrar.setBackground(new java.awt.Color(57, 196, 220));
+        btnCadastrar.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
+        btnCadastrar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCadastrar.setText("CADASTRAR");
+        btnCadastrar.setBorder(null);
+        btnCadastrar.setBorderPainted(false);
+        btnCadastrar.setFocusPainted(false);
+        btnCadastrar.setFocusable(false);
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
+                btnCadastrarActionPerformed(evt);
             }
         });
 
@@ -131,7 +142,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
-                        .addComponent(btnEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCadastrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEnviar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -153,7 +164,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnEnviar1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(26, Short.MAX_VALUE))
@@ -164,18 +175,32 @@ public class TelaCadastro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
             
                
-
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // TODO add your handling code here:
-        AlunoDAO dao = new AlunoDAO();
-        usuario = new Aluno(txtMatricula.getText(),  txtUserName.getText(), txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtTelefone.getText());
-       //Verificar se vai adicionar
-        if(verificarExistenciaDeDados() && isOnEdit == false){
-                usuario = dao.save(usuario);
-                inserirDadosJtable(txtMatricula.getText());
-        }else{
-            System.out.println("Não pode cadastra com dados faltando");
+    //botão para cadastra/editar
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        //criando um novo aluno como os dados de cadastro
+        aluno = new Aluno(txtMatricula.getText(),  txtUserName.getText(), txtFirstName.getText(), txtLastName.getText(), txtEmail.getText(), txtTelefone.getText());
+        
+        //Criando um intância da minha facade
+        AlunoFacade alunoFacade = new AlunoFacadeImpl();
+        
+        //verificar os campos
+        boolean camposValido = alunoFacade.verificarCampos(aluno);
+        
+        //Verificar o retorno se for true posso chamar meu service e salva os dados
+        if(camposValido){
+            
         }
+        
+        
+   
+        
+       //Verificar se vai adicionar
+//        if(verificarExistenciaDeDados() && isOnEdit == false){
+//                aluno = dao.save(aluno);
+//                inserirDadosJtable(txtMatricula.getText());
+//        }else{
+//            System.out.println("Não pode cadastra com dados faltando");
+//        }
         
         //Verificar se vai editar
         if(isOnEdit){
@@ -183,12 +208,12 @@ public class TelaCadastro extends javax.swing.JFrame {
             long id = (Long) dashboard.getjTable1().getValueAt(rowEditar, col);
             
             System.out.println("ID:"+id);
-            usuario.setId(id);
-            modificarTabela(usuario);
+            aluno.setId(id);
+            modificarTabela(aluno);
             
-            usuario = dao.save(usuario);  
+            aluno = dao.save(aluno);  
         }
-    }//GEN-LAST:event_btnEnviarActionPerformed
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     public void modificarTabela(Aluno usuario){
          dashboard.getjTable1().setValueAt(usuario.getUserName(), rowEditar, 2);
@@ -212,17 +237,14 @@ public class TelaCadastro extends javax.swing.JFrame {
 
     public void inserirDadosJtable(String matricula){
         //Criando um Object com os dados do usuário de cadastro
-        Object[] usuarios = { "foto" ,usuario.getId(),usuario.getUserName(),  usuario.getFirstName(), usuario.getLastName(),  usuario.getEmail(), usuario.getPhone(), matricula }; 
+        Object[] usuarios = { "foto" ,aluno.getId(),aluno.getUserName(),  aluno.getFirstName(), aluno.getLastName(),  aluno.getEmail(), aluno.getPhone(), matricula }; 
         // adiciona o array de usuários à JTable
         DefaultTableModel dtmUsuarios = (DefaultTableModel) dashboard.getjTable1().getModel();
         dtmUsuarios.addRow(usuarios);
     }
-    //verificar se todos os jlabel estão com dados
-    public boolean verificarExistenciaDeDados(){
-        return txtEmail.getText() != null && txtFirstName != null && txtLastName != null && txtMatricula != null && txtTelefone != null && txtUserName!= null;
-    }
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEnviar;
+    private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnEnviar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField txtEmail;

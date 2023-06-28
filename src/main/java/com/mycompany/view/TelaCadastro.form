@@ -38,7 +38,7 @@
                   <Component id="txtTelefone" min="-2" pref="243" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                       <Component id="txtMatricula" pref="243" max="32767" attributes="0"/>
-                      <Component id="btnEnviar" max="32767" attributes="0"/>
+                      <Component id="btnCadastrar" max="32767" attributes="0"/>
                       <Component id="btnEnviar1" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -64,7 +64,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="txtMatricula" min="-2" pref="34" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnEnviar" min="-2" pref="35" max="-2" attributes="0"/>
+              <Component id="btnCadastrar" min="-2" pref="35" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnEnviar1" min="-2" pref="35" max="-2" attributes="0"/>
               <EmptySpace pref="26" max="32767" attributes="0"/>
@@ -174,7 +174,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnEnviar">
+    <Component class="javax.swing.JButton" name="btnCadastrar">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="dc" green="c4" red="39" type="rgb"/>
@@ -185,7 +185,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Enviar"/>
+        <Property name="text" type="java.lang.String" value="CADASTRAR"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
         </Property>
@@ -194,7 +194,7 @@
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCadastrarActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnEnviar1">
